@@ -1,0 +1,175 @@
+import telebot
+import config
+import random
+from telebot import types
+import cryptocode
+TOKEN = '5012333963:AAEmvA1xARR63MM5S6NGovaGxTlAPqUf1T8' #bot token
+bot = telebot.TeleBot(config.TOKEN)
+kod = '101111001028691896210202101Character'
+iz2 = '1011110010'
+str_encoded = cryptocode.encrypt("Character","wow")
+@bot.message_handler(commands=['start'])
+def welcome(message):
+	sti = open('pics/welcome2.webp', 'rb')
+	bot.send_sticker(message.chat.id, sti)
+	markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+	item1 = types.KeyboardButton("Начать игру")
+	item2 = types.KeyboardButton("Прочитать правила игры")
+	markup.add(item1, item2)
+	bot.send_message(message.chat.id, "Добро пожаловать!\nЯ-бот созданный, чтобы вы сыграли в игру по обезвреживанию бомбы, подобрав правильный код.".format(message.from_user, bot.get_me()),
+		parse_mode='html', reply_markup=markup)
+@bot.message_handler(content_types=['text'])
+def pravila(message):
+	if message.chat.type == 'private':
+		if message.text == 'Прочитать правила игры':
+			sti4 = open('pics/pravila.webp', 'rb')
+			bot.send_sticker(message.chat.id, sti4)
+			bot.send_message(message.chat.id, "Правила игры довольно просты!\nВы должны при помощи подсказок понять, какой код загадали грабители.\n"
+											  "Но все не так просто. Вам нужно будет расшивровать шифр, чтобы узнать код.\n"
+											  "Также вам будут доступны 4 подсказки, дабы разгадать код", parse_mode='html', reply_markup=types.ReplyKeyboardRemove())
+			markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True)
+			item1 = types.KeyboardButton("Назад в меню")
+			markup1.add(item1)
+			bot.send_message(message.chat.id, "Для того, чтобы вернуться назад\nНажмите на кнопкку 'Назад в меню'", parse_mode='html', reply_markup=markup1)
+	if message.chat.type == 'private':
+		if message.text == 'Назад в меню':
+			bot.send_message(message.chat.id, "Надеемся, что вам были понятны правила данной игры.\nДля начала игры нажмите на кнопку ниже.", parse_mode='html', reply_markup=types.ReplyKeyboardRemove())
+			markup2 = types.ReplyKeyboardMarkup(resize_keyboard=True)
+			item1 = types.KeyboardButton("Начать игру")
+			markup2.add(item1)
+			sti2 = open('pics/smert.webp', 'rb')
+			bot.send_sticker(message.chat.id, sti2, reply_markup=markup2)
+	if message.chat.type == 'private':
+		if message.text == 'Начать игру':
+			markup3 = types.ReplyKeyboardMarkup(resize_keyboard=True)
+			item1 = types.KeyboardButton("Проверить код")
+			item2 = types.KeyboardButton("Получить подсказки")
+			markup3.add(item1, item2)
+			bot.send_message(message.chat.id, "Вам нужно обезвредить бомбу, которую заложили грабители\n"
+											  "Но мы нашли список, через который был придуман код", parse_mode='html', reply_markup=types.ReplyKeyboardRemove())
+			bot.send_message(message.chat.id,"Для получания подсказок нажмите на кнопку 'Получить подсказки'", parse_mode='html', reply_markup=markup3)
+	if message.chat.type == 'private':
+		if message.text == 'Получить подсказки':
+				markup4 = types.ReplyKeyboardMarkup()
+				item1 = types.KeyboardButton("Перевод из 10 в 2")
+				item2 = types.KeyboardButton("Перевод из 16 в 10")
+				item3 = types.KeyboardButton("Подсказка про А.С.Попова")
+				item4 = types.KeyboardButton("Вернуться назад")
+				item5 = types.KeyboardButton("Перевод из 10 в 3")
+				item6 = types.KeyboardButton("Расшифровка слова")
+				markup4.add(item1, item2, item3, item4, item5, item6)
+				bot.send_message(message.chat.id, "Вам даны 5 подсказок насчет шифра. Ниже есть 5 кнопок, которые помогут вам справиться с ними. Кнопка 'Вернуться назад' - возвращает вас обратно.\n"
+												  "Полученное значение вам необходимо будет отправить боту для проверки, после нажатия кнопки 'Проверить код'.\n"
+												  "Числа полученные в подсказках вводить по порядку")
+				bot.send_message(message.chat.id, "Подсказка номер один: Число 754 перевели в двоичную систему счисления\n", parse_mode='html', reply_markup=types.ReplyKeyboardRemove())
+				bot.send_message(message.chat.id, "Подсказка номер два: Какое-то число было переведено в шестнадцатиричную систему: B35\n"
+												  "Найдите его десятичное значение",parse_mode='html', reply_markup=markup4)
+				bot.send_message(message.chat.id, "Подсказка номер три: В каком году А.С.Попов произвел первую в мире передачу радиосигнала." , parse_mode='html', reply_markup=markup4)
+
+				bot.send_message(message.chat.id,
+								 "Подсказка номер четыре: Число 5286 было переведено в троичную систему счислений\n"
+								 "Найдите его", parse_mode='html', reply_markup=markup4)
+				bot.send_message(message.chat.id, "Подсказка номер пять: Слово было зашифвровано при помощи криптографии, вам нужно разгадать его\n"+str_encoded, parse_mode='html', reply_markup=markup4)
+				bot.send_message(message.chat.id,"Если вам нужна помощь с этим воспользуйтесь кнопками внизу", parse_mode='html', reply_markup=markup4)
+	if message.chat.type == 'private':
+		if message.text == 'Перевод из 10 в 2':
+			bot.send_message(message.from_user.id, 'Введите число для проверки', parse_mode='html')
+			bot.register_next_step_handler(message, iz10to2 )
+	if message.chat.type == 'private':
+		if message.text == 'Перевод из 16 в 10':
+			bot.send_message(message.from_user.id, 'Введите число для проверки', parse_mode='html')
+			bot.register_next_step_handler(message, iz16to10)
+	if message.chat.type == 'private':
+		if message.text == 'Проверить код':
+			bot.send_message(message.from_user.id, 'Введите код обезвреживания', parse_mode='html')
+			bot.register_next_step_handler(message, proverka)
+	if message.chat.type == 'private':
+		if message.text == 'Подсказка про А.С.Попова':
+			bot.send_message(message.chat.id, "В этом году также короновали Николая II", parse_mode='html')
+	if message.chat.type == 'private':
+		if message.text == 'Перевод из 10 в 3':
+			bot.send_message(message.from_user.id, 'Введите число для проверки', parse_mode='html')
+			bot.register_next_step_handler(message, iz10to3)
+	if message.chat.type == 'private':
+		if message.text == 'Расшифровка слова':
+			bot.send_message(message.from_user.id, "Введите слово для расшифровки:", parse_mode='html')
+			bot.register_next_step_handler(message, crypt)
+	if message.chat.type == 'private':
+		if message.text == 'Вернуться назад':
+			markup6 = types.ReplyKeyboardMarkup(resize_keyboard=True)
+			item1 = types.KeyboardButton("Проверить код")
+			item2 = types.KeyboardButton("Подсказки")
+			markup6.add(item1, item2)
+			bot.send_message(message.chat.id, "Добро пожаловать обратно\n"
+											  "Надеемся, что вы разгадали код",
+							 parse_mode='html', reply_markup=types.ReplyKeyboardRemove())
+			bot.send_message(message.chat.id, "Для проверки сначала нажмите 'Нажмите проверить код', а затем вводите полученное значение",
+							 parse_mode='html', reply_markup=markup6)
+	if message.chat.type == 'private':
+		if message.text == 'Подсказки':
+				markup4 = types.ReplyKeyboardMarkup()
+				item1 = types.KeyboardButton("Перевод из 10 в 2")
+				item2 = types.KeyboardButton("Перевод из 16 в 10")
+				item3 = types.KeyboardButton("Подсказка про А.С.Попова")
+				item4 = types.KeyboardButton("Вернуться назад")
+				item5 = types.KeyboardButton("Перевод из 10 в 3")
+				item6 = types.KeyboardButton("Расшифровка слова")
+				markup4.add(item1, item2, item3, item4, item5, item6)
+				bot.send_message(message.chat.id, "Вам даны 5 подсказок насчет шифра. Ниже есть 5 кнопок, которые помогут вам справиться с ними. Кнопка 'Вернуться назад' возвращает вас обратно.\n"
+												  "Полученное значение вам необходимо будет отправить боту для проверки, после нажатия клавиши 'Проверить код'.\n"
+												  "Числа полученные в подсказках вводить по порядку")
+				bot.send_message(message.chat.id, "Подсказка номер один: Число 754 перевели в двоичную систему счисления\n"
+											  "Вам нужно понять, что получилось в итоге\n", parse_mode='html', reply_markup=types.ReplyKeyboardRemove())
+				bot.send_message(message.chat.id, "Подсказка номер два: Какое-то число было переведено в шестнадцатиричную систему: B35\n"
+												  "Найдите его десятичное значение",parse_mode='html', reply_markup=markup4)
+				bot.send_message(message.chat.id, "Подсказка номер три: В каком году А.С.Попов произвел первую в мире передачу радиосигнала." , parse_mode='html', reply_markup=markup4)
+				bot.send_message(message.chat.id,
+								 "Подсказка номер четыре: Число 5286 было переведено в троичную систему счислений\n"
+								 "Найдите его", parse_mode='html', reply_markup=markup4)
+				bot.send_message(message.chat.id,
+								 "Подсказка номер пять: Слово было зашифвровано при помощи криптографии, вам нужно разгадать его\n" + str_encoded,
+								 parse_mode='html', reply_markup=markup4)
+				bot.send_message(message.chat.id,"Если вам нужно помощь с этим воспользуйтесь кнопками внизу", parse_mode='html', reply_markup=markup4)
+def iz10to2(message):
+	n = ''
+	x = int(message.text)
+	while x > 0:
+		y = str(x % 2)
+		n = y + n
+		x = int(x / 2)
+	p = int(n)
+	if p > 0:
+		bot.send_message(message.chat.id, 'Вот ваше число: ' + str(p))
+def iz16to10(message):
+	s = str(message.text)
+	i = int(s, 16)
+	if i > 0:
+		bot.send_message(message.chat.id, 'Вот ваше число: ' + str(i))
+def iz10to3(message):
+	a = int(message.text)
+	b = ''
+	while a // 3 > 0:
+		c = a % 3
+		b += str(c)
+		if a // 3 < 3:
+			b += str(a // 3)
+		a = a // 3
+	b = b[::-1]
+	z = int(b)
+	if z > 0:
+		bot.send_message(message.chat.id, 'Вот ваше число: ' + str(z))
+def crypt(message):
+	b = message.text
+	z = cryptocode.decrypt(b, "wow")
+	bot.send_message(message.chat.id, 'Вот ваше слово: ' + str(z))
+def	proverka(message):
+	if message.text != kod:
+		bot.send_message(message.chat.id, "Введенный код неверен\nВы умерли", parse_mode='html', reply_markup=types.ReplyKeyboardRemove())
+		sti5 = open('pics/death.webp', 'rb')
+		bot.send_sticker(message.chat.id, sti5)
+	elif message.text == kod:
+		bot.send_message(message.chat.id, "Поздравляем!\nВы успешно обезвредили бомбу", parse_mode='html', reply_markup=types.ReplyKeyboardRemove())
+		sti3 = open('pics/end.webp', 'rb')
+		bot.send_sticker(message.chat.id, sti3)
+bot.polling(none_stop=True)
+TOKEN = '5012333963:AAEmvA1xARR63MM5S6NGovaGxTlAPqUf1T8' #bot token
